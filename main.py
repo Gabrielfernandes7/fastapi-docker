@@ -1,9 +1,7 @@
 from fastapi import FastAPI
 
-app = FastAPI()
+from app.controller.pedido_controller import pedido_router
 
-@app.get("/")
-async def root():
-    return {
-        "message": "Hello"
-    }
+app = FastAPI(title="API FastAPI Dockerizada")
+
+app.include_router(pedido_router)

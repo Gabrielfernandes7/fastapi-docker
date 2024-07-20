@@ -1,10 +1,29 @@
-version: '3'
+version: '3.8'
 
 services:
-  web:
-    build: .
-    command: sh -c "uvicorn main:app --reload --port=8000 --host=0.0.0.0" 
+  db:
+    image: postgres:13
+    container_name: database_container
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root1914
+      POSTGRES_DB: pedidosdb
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: application_container
+    environment:
+      DATABASE_URL: postgresql+psycopg2://postgres:root1914@db:5432/pedidosdb
     ports:
       - "8000:8000"
-    volumes:
-      - .:/app
+    depends_on:
+      - db
+
+volumes:
+  postgres_data:
